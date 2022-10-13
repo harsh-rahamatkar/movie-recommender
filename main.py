@@ -52,7 +52,7 @@ def convert_to_list(my_list):
 
 def get_suggestions():
     data = pd.read_csv('main_data.csv')
-    return list(data['movie_title'].str.capitalize())
+    return [x.upper() for x in list(data['movie_title'].str.capitalize())]
 
 app = Flask(__name__)
 

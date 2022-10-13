@@ -1,36 +1,44 @@
-new autoComplete({
-    data: {                              // Data src [Array, Function, Async] | (REQUIRED)
-      src: films,
-    },
-    selector: "#autoComplete",           // Input field selector              | (Optional)
-    threshold: 2,                        // Min. Chars length to start Engine | (Optional)
-    debounce: 100,                       // Post duration for engine to start | (Optional)
-    searchEngine: "strict",              // Search Engine type/mode           | (Optional)
-    resultsList: {                       // Rendered results list object      | (Optional)
-        render: true,
-        container: source => {
-            source.setAttribute("id", "food_list");
-        },
-        destination: document.querySelector("#autoComplete"),
-        position: "afterend",
-        element: "ul"
-    },
-    maxResults: 5,                         // Max. number of rendered results | (Optional)
-    highlight: true,                       // Highlight matching results      | (Optional)
-    resultItem: {                          // Rendered result item            | (Optional)
-        content: (data, source) => {
-            source.innerHTML = data.match;
-        },
-        element: "li"
-    },
-    noResults: () => {                     // Action script on noResults      | (Optional)
-        const result = document.createElement("li");
-        result.setAttribute("class", "no_result");
-        result.setAttribute("tabindex", "1");
-        result.innerHTML = "No Results";
-        document.querySelector("#autoComplete_list").appendChild(result);
-    },
-    onSelection: feedback => {             // Action script onSelection event | (Optional)
-        document.getElementById('autoComplete').value = feedback.selection.value;
+for (i = 0; i < films.length; i++) {
+    films[i] = String(films[i])
+}
+
+suggestion_list = new Array()
+
+document.querySelector("#autoCompleteInput").addEventListener('input', function (element) {
+    element = element.target
+    element.value = element.value.toUpperCase()
+    inputvalue = element.value
+
+    if (inputvalue == "") {
+        $('.movie-button').attr('disabled', true);
     }
-});
+    else {
+        $('.movie-button').attr('disabled', false);
+    }
+
+    suggestion_list = new Array()
+    for (i = 0; i < films.length; i++) {
+        if (films[i].includes(inputvalue)) {
+            suggestion_list.push(films[i])
+            if (suggestion_list.length > 2) {
+                break
+            }
+        }
+    }
+
+    for(i = 0; i < 3; i++) {
+        if (suggestion_list[i] == undefined) suggestion_list[i]=""
+    }
+
+    $(".suggest-dropdown").attr("style", "display: block; width: fit-content; margin: auto;")
+    document.querySelector("#suggest0").innerHTML = suggestion_list[0]
+    document.querySelector("#suggest1").innerHTML = suggestion_list[1]
+    document.querySelector("#suggest2").innerHTML = suggestion_list[2]
+})
+
+
+document.querySelectorAll('.suggest-item').forEach(e => e.addEventListener('click', function(element) {
+    element = element.target
+    document.querySelector("#autoCompleteInput").value = element.innerHTML
+    $(".suggest-dropdown").attr("style", "display: none; width: fit-content; margin: auto;")
+}))

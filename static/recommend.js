@@ -1,19 +1,8 @@
 $(function() {
-  // Button will be disabled until we type anything inside the input field
-  const source = document.getElementById('autoComplete');
-  const inputHandler = function(e) {
-    if(e.target.value==""){
-      $('.movie-button').attr('disabled', true);
-    }
-    else{
-      $('.movie-button').attr('disabled', false);
-    }
-  }
-  source.addEventListener('input', inputHandler);
-
   $('.movie-button').on('click',function(){
-    var my_api_key = '24a3062e32228f2015236a5f3597ca84';
+    var my_api_key = 'f5d10f052aad7de5df7ae71a11e55aa4';
     var title = $('.movie').val();
+    // 
     if (title=="") {
       $('.results').css('display','none');
       $('.fail').css('display','block');
@@ -26,7 +15,7 @@ $(function() {
 
 // will be invoked when clicking on the recommended movies
 function recommendcard(e){
-  var my_api_key = '24a3062e32228f2015236a5f3597ca84';
+  var my_api_key = 'f5d10f052aad7de5df7ae71a11e55aa4';
   var title = e.getAttribute('title'); 
   load_details(my_api_key,title);
 }
@@ -106,6 +95,7 @@ function get_movie_details(movie_id,my_api_key,arr,movie_title) {
 
 // passing all the details to python's flask for displaying and scraping the movie reviews using imdb id
 function show_details(movie_details,arr,movie_title,my_api_key,movie_id){
+  console.log(movie_details)
   var imdb_id = movie_details.imdb_id;
   var poster = 'https://image.tmdb.org/t/p/original'+movie_details.poster_path;
   var overview = movie_details.overview;
@@ -164,6 +154,7 @@ function show_details(movie_details,arr,movie_title,my_api_key,movie_id){
     },
     success: function(response) {
       $('.results').html(response);
+      $('.middle-div').css('display','none');
       $('#autoComplete').val('');
       $(window).scrollTop(0);
     }
