@@ -4,20 +4,12 @@ from flask import Flask, render_template, request
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import bs4 as bs
-import urllib.request
-import pickle
-import nltk
 
-# load the nlp model and tfidf vectorizer from disk
-filename = 'models/nlp_model.pkl'
-clf = pickle.load(open(filename, 'rb'))
-vectorizer = pickle.load(open('models/tranform.pkl', 'rb'))
 data = pd.read_csv('datasets/final_data.csv')
 cv=CountVectorizer()
 count_matrix = cv.fit_transform(data['comb'])
 # creating a similarity score matrix
-similarity = cosine_similarity(count_matrix)
-
+csimilarity = cosine_similarity(count_matrix)
 
 
 def rcmd(id):
@@ -27,7 +19,7 @@ def rcmd(id):
             'Sorry! The movie you requested is not in our database. Please check the spelling or try with some other movies')
     else:
         i = data.loc[data['id'] == id].index[0]
-        lst = list(enumerate(similarity[i]))
+        lst = list(enumerate(csimilarity[i]))
         lst = sorted(lst, key=lambda x: x[1], reverse=True)
         lst = lst[1:11]  # excluding first item since it is the requested movie itself
         l = []
@@ -46,11 +38,11 @@ def convert_to_list(my_list):
 
 
 def get_suggestions():
-    return list(data['movie_title'].str.capitalize())
+    data = pd.read_csv('main_data.csv')
+    return [x.upper() for x in list(data['movie_title'].str.capitalize())]
 
 
 app = Flask(__name__)
-
 
 @app.route("/")
 @app.route("/home")
@@ -128,31 +120,11 @@ def recommend():
 
     cast_details = {cast_names[i]: [cast_ids[i], cast_profiles[i], cast_bdays[i], cast_places[i], cast_bios[i]] for i in
                     range(len(cast_places))}
-
-    # web scraping to get user reviews from IMDB site
-    sauce = urllib.request.urlopen('https://www.imdb.com/title/{}/reviews?ref_=tt_ov_rt'.format(imdb_id)).read()
-    soup = bs.BeautifulSoup(sauce, 'lxml')
-    soup_result = soup.find_all("div", {"class": "text show-more__control"})
-
-    reviews_list = []  # list of reviews
-    reviews_status = []  # list of comments (good or bad)
-    for reviews in soup_result:
-        if reviews.string:
-            reviews_list.append(reviews.string)
-            # passing the review to our model
-            movie_review_list = np.array([reviews.string])
-            movie_vector = vectorizer.transform(movie_review_list)
-            pred = clf.predict(movie_vector)
-            reviews_status.append('Good' if pred else 'Bad')
-
-    # combining reviews and comments into a dictionary
-    movie_reviews = {reviews_list[i]: reviews_status[i] for i in range(len(reviews_list))}
-
-    # passing all the data to the html file
+    
     return render_template('recommend.html', title=title, poster=poster, overview=overview, vote_average=vote_average,
                            vote_count=vote_count, release_date=release_date, runtime=runtime, status=status,
                            genres=genres,
-                           movie_cards=movie_cards, reviews=movie_reviews, casts=casts, cast_details=cast_details)
+                           movie_cards=movie_cards, casts=casts, cast_details=cast_details)
 
 
 if __name__ == '__main__':

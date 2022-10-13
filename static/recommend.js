@@ -1,59 +1,73 @@
-$(function() {
-  $('.movie-button').on('click',function(){
-    var my_api_key = 'f5d10f052aad7de5df7ae71a11e55aa4';
-    var title = $('.movie').val();
-    // 
-    if (title=="") {
+function firstHandler(movie_name) {
+  $.ajax ({
+    type: "POST",
+    url: '/id_by_title',
+    data: {'title': movie_name},
+    success: function(res) {
+      movie_id = res
+      $("#loader").fadeIn();
+      $('.fail').css('display','none');
+      $('.results').delay(1000).css('display','block');
+      movie_recs(movie_name,movie_id,'f5d10f052aad7de5df7ae71a11e55aa4');
+    },
+    error: function(){
       $('.results').css('display','none');
       $('.fail').css('display','block');
+      $("#loader").delay(500).fadeOut();
     }
-    else{
-      load_details(my_api_key,title);
-    }
+  })
+}
+
+$(function() {
+  $('.movie-button').on('click',function(){
+    console.log("ae halo")
+    var my_api_key = 'f5d10f052aad7de5df7ae71a11e55aa4';
+    var movie_name = $('.movie').val();
+    firstHandler(movie_name);
   });
 });
 
 // will be invoked when clicking on the recommended movies
 function recommendcard(e){
   var my_api_key = 'f5d10f052aad7de5df7ae71a11e55aa4';
-  var title = e.getAttribute('title'); 
-  load_details(my_api_key,title);
+  var title = e.getAttribute('title');
+  firstHandler(title);
 }
 
 // get the basic details of the movie from the API (based on the name of the movie)
-function load_details(my_api_key,title){
-  $.ajax({
-    type: 'GET',
-    url:'https://api.themoviedb.org/3/search/movie?api_key='+my_api_key+'&query='+title,
+// function load_details(my_api_key,title){
+//   $.ajax({
+//     type: 'GET',
+//     url:'https://api.themoviedb.org/3/search/movie?api_key='+my_api_key+'&query='+title,
 
-    success: function(movie){
-      if(movie.results.length<1){
-        $('.fail').css('display','block');
-        $('.results').css('display','none');
-        $("#loader").delay(500).fadeOut();
-      }
-      else{
-        $("#loader").fadeIn();
-        $('.fail').css('display','none');
-        $('.results').delay(1000).css('display','block');
-        var movie_id = movie.results[0].id;
-        var movie_title = movie.results[0].original_title;
-        movie_recs(movie_title,movie_id,my_api_key);
-      }
-    },
-    error: function(){
-      alert('Invalid Request');
-      $("#loader").delay(500).fadeOut();
-    },
-  });
-}
+//     success: function(movie){
+//       if(movie.results.length<1){
+//         $('.fail').css('display','block');
+//         $('.results').css('display','none');
+//         $("#loader").delay(500).fadeOut();
+//       }
+//       else{
+//         $("#loader").fadeIn();
+//         $('.fail').css('display','none');
+//         $('.results').delay(1000).css('display','block');
+//         var movie_id = movie.results[0].id;
+//         var movie_title = movie.results[0].original_title;
+//         movie_recs(movie_title,movie_id,my_api_key);
+//       }
+//     },
+//     error: function(){
+//       alert('Invalid Request');
+//       $("#loader").delay(500).fadeOut();
+//     },
+//   });
+// }
 
 // passing the movie name to get the similar movies from python's flask
 function movie_recs(movie_title,movie_id,my_api_key){
   $.ajax({
     type:'POST',
     url:"/similarity",
-    data:{'name':movie_title},
+    data:{'name':movie_id},
     success: function(recs){
       if(recs=="Sorry! The movie you requested is not in our database. Please check the spelling or try with some other movies"){
         $('.fail').css('display','block');
