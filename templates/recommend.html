@@ -79,6 +79,7 @@
     </center>
   </div>
 
+  <center>
   <div class="movie-content">
     <div id="carouselExampleControls" class="carousel" data-bs-ride="carousel" style="width: 75%; text-align: center;">
       <div class="carousel-inner">
@@ -110,6 +111,7 @@
       </button>
     </div>
   </div>
+</center>
   {% endif %}
 
   {% if movie_cards|length > 1 %}
@@ -122,17 +124,14 @@
     </center>
   </div>
 
-  <div class="movie-content">
+  <div class="movie-content" style="display: flex; flex-wrap: wrap; justify-content:space-around;">
     {% for poster, title in movie_cards.items() if not movie_cards.hidden %}
-    <div class="card" style="width: 15rem;" title="{{title}}" onclick="recommendcard(this)">
-      <div class="imghvr">
-        <img class="card-img-top" height="360" width="240" alt="{{title}} - poster" src={{poster}}>
-        <figcaption class="fig">
-          <button class="card-btn btn btn-danger"> Click Me </button>
-        </figcaption>
-      </div>
-      <div class="card-body">
+    <div class="card" style="width: 18rem; margin: 3%; text-align: center; align-items: center; align-content: center;">
+      <img src="{{poster}}" class="card-img-top" width="240px" height="300px">
+      <div class="card-body .d-block .w-100">
         <h5 class="card-title">{{title|capitalize}}</h5>
+        <br />
+        <a href="#" class="btn btn-primary" title="{{title}}" onclick="recommendcard(this)">Click Me !</a>
       </div>
     </div>
     {% endfor %}
