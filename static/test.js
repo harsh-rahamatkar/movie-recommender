@@ -73,5 +73,4 @@ function get_category_movie_posters(arr, my_api_key) {
     })
   }
   return arr_poster_list;
-
 }
