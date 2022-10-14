@@ -165,4 +165,4 @@ def display_category():
     return render_template('category.html', category=category, movie_cards=movie_cards)
 
 if __name__ == '__main__':
-    app.run(port=5002, debug=True)
+    app.run(port=5000, debug=True)

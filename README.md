@@ -5,19 +5,11 @@
 ![Frontend](https://img.shields.io/badge/Frontend-HTML/CSS/JS-green)
 ![API](https://img.shields.io/badge/API-TMDB-fcba03)
 
-A content-based recommender system that recommends movies similar to the movie the user likes and analyses the sentiments of the reviews given by the user.
-
-Check out the live demo: https://tmc.kishanlal.dev
-
-Link to youtube demo: https://www.youtube.com/watch?v=dhVePtyECFw
+A content-based recommender system that recommends movies similar to the movie the user likes.
 
 ## Overview
 
-The movies are recommended based on the content of the movie you entered or selected. The main parameters that are considered for the recommendations are the genre, director, and top 3 casts. The details of the movies, such as title, genre, runtime, rating, poster, casts, etc., are fetched from [TMDB](https://www.themoviedb.org/documentation/api). The reviews of each individual movie given by the users are "web-scraped" from the IMDB website with the help of `beautifulsoup4`, and the reviews are subjected to sentiment analysis, where the model predicts whether the review is positive or negative.
-
-## Featured in Krish's Live Session on YouTube
-
-[![krish youtube](https://github.com/kishan0725/AJAX-Movie-Recommendation-System-with-Sentiment-Analysis/blob/master/static/krish-naik.PNG)](https://www.youtube.com/watch?v=A_78fGgQMjM)
+The movies are recommended based on the content of the movie you entered or selected. The main parameters that are considered for the recommendations are the genre, director, and top 3 casts. The details of the movies, such as title, genre, runtime, rating, poster, casts, etc., are fetched from [TMDB](https://www.themoviedb.org/documentation/api).
 
 ## How to get the API key?
 
@@ -58,4 +50,6 @@ More about Cosine Similarity : [Understanding the Math behind Cosine Similarity]
 3. [List of movies in 2018](https://en.wikipedia.org/wiki/List_of_American_films_of_2018)
 4. [List of movies in 2019](https://en.wikipedia.org/wiki/List_of_American_films_of_2019)
 5. [List of movies in 2020](https://en.wikipedia.org/wiki/List_of_American_films_of_2020)
+6. [List of movies in 2021](https://en.wikipedia.org/wiki/List_of_American_films_of_2021)
+7. [List of movies in 2022](https://en.wikipedia.org/wiki/List_of_American_films_of_2022)
 
