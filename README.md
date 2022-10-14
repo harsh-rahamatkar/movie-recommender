@@ -27,7 +27,7 @@ Create an account in https://www.themoviedb.org/. Once you successfully created 
 
 ## Architecture
 
-![Recommendation App](https://user-images.githubusercontent.com/36665975/168742738-5435cf76-1a42-4d87-94b4-999e5bfc48d3.png)
+![Recommendation App](static/architecture.png)
 
 ## Similarity Score : 
 
