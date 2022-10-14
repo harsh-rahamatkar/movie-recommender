@@ -16,7 +16,9 @@
   <div id="mycontent" class="container" style="
     background-image: linear-gradient(to RIGHT, rgba(32, 16, 16, 0), rgba(32, 16, 16, 0.7), rgba(32, 16, 16, 0.9)), 
     url({{poster}});
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left;
     padding: 20px;">
     <div class="row">
       <div class="col"></div>
@@ -94,7 +96,7 @@
         {% endfor %}
         <div class="carousel-item active" data-bs-interval="100000">
           <br />
-          <h1>Click Next To See Cast</h1>
+          <h1 style="color:white;">Click Next To See Cast</h1>
           <br />
         </div>
       </div>

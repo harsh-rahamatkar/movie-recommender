@@ -21,7 +21,7 @@ def rcmd(id):
         i = data.loc[data['id'] == id].index[0]
         lst = list(enumerate(csimilarity[i]))
         lst = sorted(lst, key=lambda x: x[1], reverse=True)
-        lst = lst[1:11]  # excluding first item since it is the requested movie itself
+        lst = lst[1:13]  # excluding first item since it is the requested movie itself
         l = {"titles":[],"ids":[]}
         for i in range(len(lst)):
             a = lst[i][0]
@@ -79,7 +79,7 @@ def filter_by_category():
         return gc
     else:
         c_str="---".join(gc)
-        return 
+        return  c_str
 
 @app.route("/similarity", methods=["POST"])
 def similarity():
@@ -165,4 +165,4 @@ def display_category():
     return render_template('category.html', category=category, movie_cards=movie_cards)
 
 if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+    app.run(port=5002, debug=True)
