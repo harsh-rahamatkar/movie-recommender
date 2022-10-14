@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import bs4 as bs
@@ -22,10 +22,11 @@ def rcmd(id):
         lst = list(enumerate(csimilarity[i]))
         lst = sorted(lst, key=lambda x: x[1], reverse=True)
         lst = lst[1:11]  # excluding first item since it is the requested movie itself
-        l = []
+        l = {"titles":[],"ids":[]}
         for i in range(len(lst)):
             a = lst[i][0]
-            l.append(data['movie_title'][a])
+            l["titles"].append(str(data['movie_title'][a]))
+            l["ids"].append(str(data['id'][a]))
         return l
 
 
@@ -64,8 +65,8 @@ def similarity():
     if type(rc) == type('string'):
         return rc
     else:
-        m_str = "---".join(rc)
-        return m_str
+        #m_str = "---".join(rc)
+        return jsonify(rc)
 
 
 @app.route("/recommend", methods=["POST"])
