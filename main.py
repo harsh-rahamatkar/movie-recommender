@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import bs4 as bs
@@ -22,10 +22,11 @@ def rcmd(id):
         lst = list(enumerate(csimilarity[i]))
         lst = sorted(lst, key=lambda x: x[1], reverse=True)
         lst = lst[1:11]  # excluding first item since it is the requested movie itself
-        l = []
+        l = {"titles":[],"ids":[]}
         for i in range(len(lst)):
             a = lst[i][0]
-            l.append(data['movie_title'][a])
+            l["titles"].append(str(data['movie_title'][a]))
+            l["ids"].append(str(data['id'][a]))
         return l
 
 
@@ -40,6 +41,14 @@ def convert_to_list(my_list):
 def get_suggestions():
     data = pd.read_csv('main_data.csv')
     return [x.upper() for x in list(data['movie_title'].str.capitalize())]
+
+#Category wise list
+def category(c):
+    data = pd.read_csv('main_data.csv')
+    data_cat = data[data['genres'].str.lower().str.contains(c.lower()).fillna(False)]
+    data_cat = data_cat.sort_values(by=['year'], ascending=False)
+    data_cat = data_cat['movie_title'].tolist()[0:12]
+    return data_cat
 
 
 app = Flask(__name__)
@@ -57,6 +66,21 @@ def id_by_title():
     print(title,result)
     return result
 
+
+@app.route("/aboutus")
+def aboutUs():
+    return render_template('about_us.html')
+
+@app.route("/category",methods=["POST"])
+def filter_by_category():
+    cat = request.form['category']
+    gc = category(cat)
+    if type(gc)==type('string'):
+        return gc
+    else:
+        c_str="---".join(gc)
+        return 
+
 @app.route("/similarity", methods=["POST"])
 def similarity():
     movie = request.form['name']
@@ -64,8 +88,8 @@ def similarity():
     if type(rc) == type('string'):
         return rc
     else:
-        m_str = "---".join(rc)
-        return m_str
+        #m_str = "---".join(rc)
+        return jsonify(rc)
 
 
 @app.route("/recommend", methods=["POST"])
@@ -126,6 +150,19 @@ def recommend():
                            genres=genres,
                            movie_cards=movie_cards, casts=casts, cast_details=cast_details)
 
+@app.route("/display_category",methods=["POST"])
+def display_category():
+    cat_movies = request.form['cat_movies']
+    cat_posters = request.form['cat_posters']
+
+    category = request.form['category']
+
+    cat_movies = convert_to_list(cat_movies)
+    cat_posters = convert_to_list(cat_posters)
+
+    movie_cards = {cat_posters[i]: cat_movies[i] for i in range(len(cat_posters))}
+
+    return render_template('category.html', category=category, movie_cards=movie_cards)
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
