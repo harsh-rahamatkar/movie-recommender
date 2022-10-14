@@ -6,8 +6,6 @@ function openAboutUs(){
 //Categories
 function category_movie_display(category) {
   var my_api_key = 'e6651995379a6765f81a2cdcb4b9ac1d';
-  document.getElementById("search").style.display = "none";
-  document.getElementById("navbarDropdown").style.display = "none";
   $.ajax({
     type: 'POST',
     url: "/category",
@@ -65,6 +63,7 @@ function get_category_movie_posters(arr, my_api_key) {
       url: 'https://api.themoviedb.org/3/search/movie?api_key=' + my_api_key + '&query=' + arr[m],
       async: false,
       success: function (m_data) {
+        document.getElementsByClassName('middle-div')[0].style.display = "none";
         arr_poster_list.push('https://image.tmdb.org/t/p/original' + m_data.results[0].poster_path);
       },
       error: function () {
