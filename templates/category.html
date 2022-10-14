@@ -1,0 +1,45 @@
+<!DOCTYPE html5>
+<html>
+
+<body id="content">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
+	<div class="results">
+		<center>
+			<h1>...</h1>
+			<h2 id="name" class="text-uppercase">{{category}} MOVIES</h2>
+		</center>
+	</div>
+	<br>
+
+	{% if movie_cards|length > 1 %}
+	<div class="movie" style="color: #E8E8E8;">
+		<center>
+			<h5>(Click any of the movies to get recommendation)</h5>
+		</center>
+	</div>
+
+
+
+	<div class="movie-content">
+		{% for poster, title in movie_cards.items() if not movie_cards.hidden %}
+		<div class="card" style="width: 15rem;" title="{{title}}" onclick="recommendcard(this)">
+			<div class="imghvr">
+				<img class="card-img-top" height="360" width="240" alt="{{title}} - poster" src={{poster}}>
+				<figcaption class="fig">
+					<button class="card-btn btn btn-danger"> Click Me </button>
+				</figcaption>
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">{{title|capitalize}}</h5>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+
+	<script type="text/javascript" src="static/test.js"></script>
+    <script type="text/javascript" src="static/recommend.js"></script>
+
+</body>
+
+</html>
