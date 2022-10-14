@@ -6,7 +6,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import bs4 as bs
 
 data = pd.read_csv('datasets/final_data.csv')
-cv=CountVectorizer()
+
+cv = CountVectorizer()
+
 count_matrix = cv.fit_transform(data['comb'])
 # creating a similarity score matrix
 csimilarity = cosine_similarity(count_matrix)
@@ -59,6 +61,22 @@ def home():
     suggestions = get_suggestions()
     return render_template('home.html', suggestions=suggestions)
 
+
+@app.route("/id_by_title",methods=['POST'])
+def id_by_title():
+    title=request.form['title'].lower()
+    result=str(data[data['movie_title']==title]['id'].iloc[0])
+    print(title,result)
+    return result
+
+
+@app.route("/aboutUs")
+def aboutUs():
+    return render_template('about_us.html')
+
+
+
+
 @app.route("/id_by_title",methods=['POST'])
 def id_by_title():
     title=request.form['title'].lower()
@@ -80,6 +98,27 @@ def filter_by_category():
     else:
         c_str="---".join(gc)
         return 
+
+@app.route("/similarity", methods=["POST"])
+def similarity():
+    movie = request.form['name']
+    rc = rcmd(movie)
+    if type(rc) == type('string'):
+        return rc
+    else:
+        m_str = "---".join(rc)
+        return m_str
+
+
+@app.route("/category",methods=["POST"])
+def filter_by_category():
+    cat = request.form['category']
+    gc = category(cat)
+    if type(gc)==type('string'):
+        return gc
+    else:
+        c_str="---".join(gc)
+        return c_str
 
 @app.route("/similarity", methods=["POST"])
 def similarity():
@@ -144,7 +183,27 @@ def recommend():
 
     cast_details = {cast_names[i]: [cast_ids[i], cast_profiles[i], cast_bdays[i], cast_places[i], cast_bios[i]] for i in
                     range(len(cast_places))}
-    
+                    
+    # web scraping to get user reviews from IMDB site
+    sauce = urllib.request.urlopen('https://www.imdb.com/title/{}/reviews?ref_=tt_ov_rt'.format(imdb_id)).read()
+    soup = bs.BeautifulSoup(sauce, 'lxml')
+    soup_result = soup.find_all("div", {"class": "text show-more__control"})
+
+    reviews_list = []  # list of reviews
+    reviews_status = []  # list of comments (good or bad)
+    for reviews in soup_result:
+        if reviews.string:
+            reviews_list.append(reviews.string)
+            # passing the review to our model
+            movie_review_list = np.array([reviews.string])
+            movie_vector = vectorizer.transform(movie_review_list)
+            pred = clf.predict(movie_vector)
+            reviews_status.append('Good' if pred else 'Bad')
+
+    # combining reviews and comments into a dictionary
+    movie_reviews = {reviews_list[i]: reviews_status[i] for i in range(len(reviews_list))}
+
+    # passing all the data to the html file
     return render_template('recommend.html', title=title, poster=poster, overview=overview, vote_average=vote_average,
                            vote_count=vote_count, release_date=release_date, runtime=runtime, status=status,
                            genres=genres,
@@ -163,6 +222,7 @@ def display_category():
     movie_cards = {cat_posters[i]: cat_movies[i] for i in range(len(cat_posters))}
 
     return render_template('category.html', category=category, movie_cards=movie_cards)
+
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
