@@ -6,7 +6,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import bs4 as bs
 
 data = pd.read_csv('datasets/final_data.csv')
+
 cv = CountVectorizer()
+
 count_matrix = cv.fit_transform(data['comb'])
 # creating a similarity score matrix
 csimilarity = cosine_similarity(count_matrix)
@@ -22,7 +24,7 @@ def rcmd(id):
         lst = list(enumerate(csimilarity[i]))
         lst = sorted(lst, key=lambda x: x[1], reverse=True)
         lst = lst[1:11]  # excluding first item since it is the requested movie itself
-        l = {"titles": [], "ids": []}
+        l = {"titles":[],"ids":[]}
         for i in range(len(lst)):
             a = lst[i][0]
             l["titles"].append(str(data['movie_title'][a]))
@@ -59,6 +61,7 @@ def home():
     suggestions = get_suggestions()
     return render_template('home.html', suggestions=suggestions)
 
+
 @app.route("/id_by_title",methods=['POST'])
 def id_by_title():
     title=request.form['title'].lower()
@@ -71,6 +74,30 @@ def id_by_title():
 def aboutUs():
     return render_template('about_us.html')
 
+
+
+
+@app.route("/id_by_title",methods=['POST'])
+def id_by_title():
+    title=request.form['title'].lower()
+    result=str(data[data['movie_title']==title]['id'].iloc[0])
+    print(title,result)
+    return result
+
+
+@app.route("/aboutus")
+def aboutUs():
+    return render_template('about_us.html')
+
+@app.route("/category",methods=["POST"])
+def filter_by_category():
+    cat = request.form['category']
+    gc = category(cat)
+    if type(gc)==type('string'):
+        return gc
+    else:
+        c_str="---".join(gc)
+        return 
 
 @app.route("/similarity", methods=["POST"])
 def similarity():
@@ -156,7 +183,7 @@ def recommend():
 
     cast_details = {cast_names[i]: [cast_ids[i], cast_profiles[i], cast_bdays[i], cast_places[i], cast_bios[i]] for i in
                     range(len(cast_places))}
-
+                    
     # web scraping to get user reviews from IMDB site
     sauce = urllib.request.urlopen('https://www.imdb.com/title/{}/reviews?ref_=tt_ov_rt'.format(imdb_id)).read()
     soup = bs.BeautifulSoup(sauce, 'lxml')
