@@ -39,12 +39,12 @@ def convert_to_list(my_list):
 
 
 def get_suggestions():
-    data = pd.read_csv('main_data.csv')
+    data = pd.read_csv('datasets/final_data.csv')
     return [x.upper() for x in list(data['movie_title'].str.capitalize())]
 
 #Category wise list
 def category(c):
-    data = pd.read_csv('main_data.csv')
+    data = pd.read_csv('datasets/final_data.csv')
     data_cat = data[data['genres'].str.lower().str.contains(c.lower()).fillna(False)]
     data_cat = data_cat.sort_values(by=['year'], ascending=False)
     data_cat = data_cat['movie_title'].tolist()[0:12]

@@ -34,33 +34,6 @@ function recommendcard(e){
   firstHandler(title);
 }
 
-// get the basic details of the movie from the API (based on the name of the movie)
-// function load_details(my_api_key,title){
-//   $.ajax({
-//     type: 'GET',
-//     url:'https://api.themoviedb.org/3/search/movie?api_key='+my_api_key+'&query='+title,
-
-//     success: function(movie){
-//       if(movie.results.length<1){
-//         $('.fail').css('display','block');
-//         $('.results').css('display','none');
-//         $("#loader").delay(500).fadeOut();
-//       }
-//       else{
-//         $("#loader").fadeIn();
-//         $('.fail').css('display','none');
-//         $('.results').delay(1000).css('display','block');
-//         var movie_id = movie.results[0].id;
-//         var movie_title = movie.results[0].original_title;
-//         movie_recs(movie_title,movie_id,my_api_key);
-//       }
-//     },
-//     error: function(){
-//       alert('Invalid Request');
-//       $("#loader").delay(500).fadeOut();
-//     },
-//   });
-// }
 
 // passing the movie name to get the similar movies from python's flask
 function movie_recs(movie_title,movie_id,my_api_key){
@@ -112,7 +85,7 @@ function get_movie_details(movie_id,my_api_key,movie_arr,movie_ids,movie_title) 
 function show_details(movie_details,movie_arr,movie_ids,movie_title,my_api_key,movie_id){
   console.log(movie_details)
   var imdb_id = movie_details.imdb_id;
-  var poster = 'https://image.tmdb.org/t/p/original'+movie_details.poster_path;
+  var poster = 'https://image.tmdb.org/t/p/original'+movie_details.backdrop_path;
   var overview = movie_details.overview;
   var genres = movie_details.genres;
   var rating = movie_details.vote_average;
@@ -120,6 +93,7 @@ function show_details(movie_details,movie_arr,movie_ids,movie_title,my_api_key,m
   var release_date = new Date(movie_details.release_date);
   var runtime = parseInt(movie_details.runtime);
   var status = movie_details.status;
+  var original_title=movie_details.original_title;
   var genre_list = []
   for (var genre in genres){
     genre_list.push(genres[genre].name);
@@ -138,7 +112,7 @@ function show_details(movie_details,movie_arr,movie_ids,movie_title,my_api_key,m
   ind_cast = get_individual_cast(movie_cast,my_api_key);
   
   details = {
-    'title':movie_title,
+    'title':original_title,
       'cast_ids':JSON.stringify(movie_cast.cast_ids),
       'cast_names':JSON.stringify(movie_cast.cast_names),
       'cast_chars':JSON.stringify(movie_cast.cast_chars),
