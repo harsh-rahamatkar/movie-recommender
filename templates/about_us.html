@@ -44,26 +44,6 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#" onclick=openAboutUs()>About Us</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Category
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <h6 class="dropdown-item">Top Categories</h6>
-              </li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" href="#" onclick="category_movie_display('Action')">Action</a></li>
-              <li><a class="dropdown-item" href="#" onclick="category_movie_display('Adventure')">Adventure</a></li>
-              <li><a class="dropdown-item" href="#" onclick="category_movie_display('Fantasy')">Fantasy</a></li>
-              <li><a class="dropdown-item" href="#" onclick="category_movie_display('Thriller')">Thriller</a></li>
-              <li><a class="dropdown-item" href="#" onclick="category_movie_display('Sci-Fi')">Sci-Fi</a></li>
-              <li><a class="dropdown-item" href="#" onclick="category_movie_display('Comedy')">Comedy</a></li>
-            </ul>
-          </li>
         </ul>
         <a class="btn btn-transparent" href="/loginpage" style="font-size: 15px;"><i class="fa-regular fa-user"
             style="color: white;">&emsp;Login / Signup</i></a>
@@ -146,9 +126,8 @@
   </style>
 
   <div class="about-section">
-    <h1>About Us Page</h1>
-    <p>Some text about who we are and what we do.</p>
-    <p>Resize the browser window to see that this page is responsive by the way.</p>
+    <h1 style="font-size: 40px; padding: 10px; color:#eedfa3;">About Us Page</h1>
+    <p style="font-size: 20px; padding: 10px; color: #ffffff;">We recommend best movies conforming to users' choice</p>
   </div>
 
   <br>
@@ -172,7 +151,10 @@
         <div class="container">
           <h2>About Our System</h2>
           <p class="title">Movie Recommender System</p>
-          <p>Our system recommends movies based on Content based filtering and Collaborative filtering</p>
+          <p>
+            Our system recommends movies based on Content based filtering and Collaborative filtering.<br>
+            The movies are recommended based on the content of the movie you entered or selected. The main parameters that are considered for the recommendations are the genre, director, and top 3 casts. The details of the movies, such as title, genre, runtime, rating, poster, casts, etc., are fetched from TMDB.
+          </p>
         </div>
       </div>
     </div>

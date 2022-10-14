@@ -7,6 +7,7 @@ function openAboutUs(){
 function category_movie_display(category) {
   var my_api_key = 'e6651995379a6765f81a2cdcb4b9ac1d';
   document.getElementById("search").style.display = "none";
+  document.getElementById("navbarDropdown").style.display = "none";
   $.ajax({
     type: 'POST',
     url: "/category",
