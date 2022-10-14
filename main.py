@@ -54,6 +54,14 @@ def get_suggestions():
     data = pd.read_csv('main_data.csv')
     return [x.upper() for x in list(data['movie_title'].str.capitalize())]
 
+#Category wise list
+def category(c):
+    data = pd.read_csv('main_data.csv')
+    data_cat = data[data['genres'].str.lower().str.contains("Sci-fi".lower()).fillna(False)]
+    data_cat = data_cat.sort_values(by=['year'], ascending=False)
+    data_cat = data_cat['movie_title'].tolist()[0:12]
+    return data_cat
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -61,6 +69,10 @@ app = Flask(__name__)
 def home():
     suggestions = get_suggestions()
     return render_template('home.html',suggestions=suggestions)
+
+@app.route("/aboutUs")
+def aboutUs():
+    return render_template('about_us.html')
 
 @app.route("/similarity",methods=["POST"])
 def similarity():
@@ -71,6 +83,16 @@ def similarity():
     else:
         m_str="---".join(rc)
         return m_str
+
+@app.route("/category",methods=["POST"])
+def filter_by_category():
+    cat = request.form['category']
+    gc = category(cat)
+    if type(gc)==type('string'):
+        return gc
+    else:
+        c_str="---".join(gc)
+        return c_str
 
 @app.route("/recommend",methods=["POST"])
 def recommend():
@@ -147,6 +169,20 @@ def recommend():
     return render_template('recommend.html',title=title,poster=poster,overview=overview,vote_average=vote_average,
         vote_count=vote_count,release_date=release_date,runtime=runtime,status=status,genres=genres,
         movie_cards=movie_cards,reviews=movie_reviews,casts=casts,cast_details=cast_details)
+
+@app.route("/display_category",methods=["POST"])
+def display_category():
+    cat_movies = request.form['cat_movies']
+    cat_posters = request.form['cat_posters']
+
+    category = request.form['category']
+
+    cat_movies = convert_to_list(cat_movies)
+    cat_posters = convert_to_list(cat_posters)
+
+    movie_cards = {cat_posters[i]: cat_movies[i] for i in range(len(cat_posters))}
+
+    return render_template('category.html', category=category, movie_cards=movie_cards)
 
 if __name__ == '__main__':
     app.run(debug=True)
